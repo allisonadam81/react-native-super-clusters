@@ -1,5 +1,5 @@
 {
-  "name": "react-native-map-clustering",
+  "name": "react-native-super-clusters",
   "version": "3.4.2",
   "description": "React Native Map Clustering both for Android and iOS",
   "types": "index.d.ts",
@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/venits/react-native-map-clustering#readme",
   "dependencies": {
-    "supercluster": "^7.1.0",
-    "@mapbox/geo-viewport": "^0.4.1"
+    "@mapbox/geo-viewport": "^0.4.1",
+    "supercluster": "^8.0.1"
   },
   "peerDependencies": {
-    "react-native-maps": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-maps": "*"
   }
 }
