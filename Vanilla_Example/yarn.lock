@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@allisonadam81/react-native-super-clusters@../":
+"@allisonadam81/react-native-super-clusters@../lib":
   version "3.4.2"
   dependencies:
     "@mapbox/geo-viewport" "^0.4.1"
