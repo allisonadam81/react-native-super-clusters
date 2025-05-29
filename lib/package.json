@@ -1,16 +1,14 @@
 {
   "name": "@allisonadam81/react-native-super-clusters",
-  "version": "3.4.2",
+  "version": "0.0.1",
   "description": "React Native Map Clustering both for Android and iOS",
   "types": "index.d.ts",
   "main": "index.js",
   "scripts": {
     "test": "jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/venits/react-native-map-clustering.git"
-  },
+  "homepage": "https://github.com/allisonadam81/react-native-super-clusters.git",
+  "repository": "https://github.com/allisonadam81/react-native-super-clusters.git",
   "keywords": [
     "react-native",
     "react",
@@ -20,12 +18,8 @@
     "map",
     "clustering"
   ],
-  "author": "Venits",
+  "author": "Adam Allison",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/venits/react-native-map-clustering/issues"
-  },
-  "homepage": "https://github.com/venits/react-native-map-clustering#readme",
   "dependencies": {
     "@mapbox/geo-viewport": "^0.4.1",
     "supercluster": "^8.0.1"
@@ -33,5 +27,6 @@
   "peerDependencies": {
     "react-native": "*",
     "react-native-maps": "*"
-  }
+  },
+  "private": false
 }
