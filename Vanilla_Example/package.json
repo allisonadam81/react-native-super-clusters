@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "react": "19.0.0",
-    "react-native": "0.79.2"
+    "react-native": "0.79.2",
+    "react-native-maps": "^1.23.8",
+    "@allisonadam81/react-native-super-clusters": "../lib"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

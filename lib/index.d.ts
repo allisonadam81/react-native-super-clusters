@@ -1,4 +1,4 @@
-declare module "react-native-map-clustering" {
+declare module "@allisonadam81/react-native-super-clusters" {
   import * as React from "react";
   import { LayoutAnimationConfig } from "react-native";
   import Map, { MapViewProps, Marker } from "react-native-maps";
