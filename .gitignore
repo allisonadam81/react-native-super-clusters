@@ -1,0 +1,74 @@
+# Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+.pnpm-debug.log
+.yarn/
+
+# Build outputs
+lib-cov/
+coverage/
+.nyc_output/
+build/
+dist/
+.jest/
+
+# React Native specific
+.expo/
+.expo-shared/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+web-report/
+
+# Environment and configuration
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# iOS specific
+ios/Pods/
+ios/build/
+ios/.xcode.env.local
+*.xcuserstate
+ios/Podfile.lock
+xcuserdata/
+
+# Android specific
+android/app/build/
+android/build/
+android/gradle/
+android/local.properties
+android/.gradle/
+android/captures/
+android/app/release/
+*.hprof
+
+# Generated files
+*.tsbuildinfo
+.eslintcache
+
+# Temporary files
+*.log
+*.tmp
+.backup/
+
+# Lock files (optional, depending on your team's workflow)
+# package-lock.json
+# yarn.lock
