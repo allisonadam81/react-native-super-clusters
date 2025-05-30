@@ -7,6 +7,7 @@ import {
   forwardRef,
   RefObject,
   Children,
+  ReactNode,
 } from 'react';
 import {
   Dimensions,
@@ -14,7 +15,11 @@ import {
   LayoutAnimationConfig,
   Platform,
 } from 'react-native';
-import MapView, { MapViewProps, Polyline } from 'react-native-maps';
+import MapView, {
+  EdgePadding,
+  MapViewProps,
+  Polyline,
+} from 'react-native-maps';
 import SuperCluster from 'supercluster';
 import ClusterMarker from '../ClusteredMarker';
 import {
@@ -42,13 +47,13 @@ export type ClusteredMapViewProps = {
   spiderLineColor?: string;
   layoutAnimationConf?: LayoutAnimationConfig;
   animationEnabled?: boolean;
-  renderCluster?: any;
+  renderCluster?: (clusterProps: any) => ReactNode;
   tracksViewChanges?: boolean;
   spiralEnabled?: boolean;
   superClusterRef?: RefObject<SuperCluster | null>;
-  edgePadding?: any;
-  onClusterPress?: any;
-  onMarkersChange?: any;
+  edgePadding?: EdgePadding;
+  onClusterPress?: (cluster: any, children: any) => void;
+  onMarkersChange?: (markers: any) => void;
 } & MapViewProps;
 
 const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
@@ -84,7 +89,7 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
     const [otherChildren, updateChildren] = useState([]);
     const [superCluster, setSuperCluster] = useState<SuperCluster | null>(null);
     const [currentRegion, updateRegion] = useState(
-      restProps.region || restProps.initialRegion
+      restProps.region || restProps.initialRegion,
     );
 
     const [isSpiderfier, updateSpiderfier] = useState(false);
@@ -145,7 +150,7 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
           if (marker.properties.cluster) {
             spiralChildren = superCluster.getLeaves(
               marker.properties.cluster_id,
-              Infinity
+              Infinity,
             );
           }
           let positions = generateSpiral(marker, spiralChildren, markers, i);
@@ -180,7 +185,7 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
       }
     };
 
-    const _onClusterPress = (cluster) => () => {
+    const _onClusterPress = cluster => () => {
       const children = superCluster.getLeaves(cluster.id, Infinity);
       updateClusterChildren(children);
 
@@ -204,14 +209,13 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
     return (
       <MapView
         {...restProps}
-        ref={(map) => {
+        ref={map => {
           mapRef.current = map;
           if (ref) ref.current = map;
           restProps.mapRef && restProps.mapRef(map);
         }}
-        onRegionChangeComplete={_onRegionChangeComplete}
-      >
-        {markers.map((marker) =>
+        onRegionChangeComplete={_onRegionChangeComplete}>
+        {markers.map(marker =>
           marker.properties.point_count === 0 ? (
             propsChildren[marker.properties.index]
           ) : !isSpiderfier ? (
@@ -238,10 +242,10 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
                 tracksViewChanges={tracksViewChanges}
               />
             )
-          ) : null
+          ) : null,
         )}
         {otherChildren}
-        {spiderMarkers.map((marker) => {
+        {spiderMarkers.map(marker => {
           return propsChildren[marker.index]
             ? React.cloneElement(propsChildren[marker.index], {
                 coordinate: { ...marker },
@@ -258,7 +262,7 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
         ))}
       </MapView>
     );
-  }
+  },
 );
 
 export default memo(ClusteredMapView);

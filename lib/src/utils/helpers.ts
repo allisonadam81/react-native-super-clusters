@@ -1,15 +1,15 @@
-import GeoViewport from "@mapbox/geo-viewport";
-import { Dimensions } from "react-native";
+import GeoViewport from '@mapbox/geo-viewport';
+import { Dimensions } from 'react-native';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
-export const isMarker = (child) =>
+export const isMarker = child =>
   child &&
   child.props &&
   child.props.coordinate &&
   child.props.cluster !== false;
 
-export const calculateBBox = (region) => {
+export const calculateBBox = region => {
   let lngD;
   if (region.longitudeDelta < 0) lngD = region.longitudeDelta + 360;
   else lngD = region.longitudeDelta;
@@ -33,13 +33,13 @@ export const returnMapZoom = (region, bBox, minZoom) => {
 
 export const markerToGeoJSONFeature = (marker, index) => {
   return {
-    type: "Feature",
+    type: 'Feature',
     geometry: {
       coordinates: [
         marker.props.coordinate.longitude,
         marker.props.coordinate.latitude,
       ],
-      type: "Point",
+      type: 'Point',
     },
     properties: {
       point_count: 0,
@@ -83,7 +83,7 @@ export const generateSpiral = (marker, clusterChildren, markers, index) => {
   return res;
 };
 
-export const returnMarkerStyle = (points) => {
+export const returnMarkerStyle = points => {
   if (points >= 50) {
     return {
       width: 84,
@@ -146,10 +146,10 @@ export const returnMarkerStyle = (points) => {
   };
 };
 
-const _removeChildrenFromProps = (props) => {
+const _removeChildrenFromProps = props => {
   const newProps = {};
-  Object.keys(props).forEach((key) => {
-    if (key !== "children") {
+  Object.keys(props).forEach(key => {
+    if (key !== 'children') {
       newProps[key] = props[key];
     }
   });

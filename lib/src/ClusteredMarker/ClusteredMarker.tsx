@@ -3,6 +3,16 @@ import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { returnMarkerStyle } from '../utils/helpers';
 
+export type ClusteredMarkerProps = {
+  geometry: any,
+  properties: any,
+  onPress: any,
+  clusterColor: any,
+  clusterTextColor: any,
+  clusterFontFamily: any,
+  tracksViewChanges: any,
+}
+
 const ClusteredMarker = ({
   geometry,
   properties,
@@ -11,7 +21,7 @@ const ClusteredMarker = ({
   clusterTextColor,
   clusterFontFamily,
   tracksViewChanges,
-}) => {
+}: ClusteredMarkerProps) => {
   const points = properties.point_count;
   const { width, height, fontSize, size } = returnMarkerStyle(points);
 
