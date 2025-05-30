@@ -1,28 +1,59 @@
-import React, {
+import {
   memo,
   useState,
   useEffect,
   useMemo,
   useRef,
   forwardRef,
+  RefObject,
+  Children,
 } from 'react';
-import { Dimensions, LayoutAnimation, Platform } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import {
+  Dimensions,
+  LayoutAnimation,
+  LayoutAnimationConfig,
+  Platform,
+} from 'react-native';
+import MapView, { MapViewProps, Polyline } from 'react-native-maps';
 import SuperCluster from 'supercluster';
-import ClusterMarker from './ClusteredMarker';
+import ClusterMarker from '../ClusteredMarker';
 import {
   isMarker,
   markerToGeoJSONFeature,
   calculateBBox,
   returnMapZoom,
   generateSpiral,
-} from './helpers';
+} from '../utils';
 
 const defaultEdgePadding = { top: 50, left: 50, right: 50, bottom: 50 };
 
-const ClusteredMapView = forwardRef(
-  (
-    {
+export type ClusteredMapViewProps = {
+  radius?: number;
+  maxZoom?: number;
+  minZoom?: number;
+  minPoints?: number;
+  extent?: number;
+  nodeSize?: number;
+  preserveClusterPressBehavior?: boolean;
+  clusteringEnabled: true;
+  clusterColor?: string;
+  clusterTextColor?: string;
+  clusterFontFamily?: string;
+  spiderLineColor?: string;
+  layoutAnimationConf?: LayoutAnimationConfig;
+  animationEnabled?: boolean;
+  renderCluster?: any;
+  tracksViewChanges?: boolean;
+  spiralEnabled?: boolean;
+  superClusterRef?: RefObject<SuperCluster | null>;
+  edgePadding?: any;
+  onClusterPress?: any;
+  onMarkersChange?: any;
+} & MapViewProps;
+
+const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
+  (props, ref) => {
+    const {
       radius = Dimensions.get('window').width * 0.06,
       maxZoom = 20,
       minZoom = 1,
@@ -47,25 +78,20 @@ const ClusteredMapView = forwardRef(
       superClusterRef,
       edgePadding = defaultEdgePadding,
       ...restProps
-    },
-    ref
-  ) => {
+    } = props;
     const [markers, updateMarkers] = useState([]);
     const [spiderMarkers, updateSpiderMarker] = useState([]);
     const [otherChildren, updateChildren] = useState([]);
-    const [superCluster, setSuperCluster] = useState(null);
+    const [superCluster, setSuperCluster] = useState<SuperCluster | null>(null);
     const [currentRegion, updateRegion] = useState(
       restProps.region || restProps.initialRegion
     );
 
     const [isSpiderfier, updateSpiderfier] = useState(false);
     const [clusterChildren, updateClusterChildren] = useState(null);
-    const mapRef = useRef();
+    const mapRef = useRef<MapView>(null);
 
-    const propsChildren = useMemo(
-      () => React.Children.toArray(children),
-      [children]
-    );
+    const propsChildren = useMemo(() => Children.toArray(children), [children]);
 
     useEffect(() => {
       const rawData = [];
@@ -132,7 +158,7 @@ const ClusteredMapView = forwardRef(
       }
     }, [isSpiderfier, markers]);
 
-    const _onRegionChangeComplete = (region) => {
+    const _onRegionChangeComplete = (region, details) => {
       if (superCluster && region) {
         const bBox = calculateBBox(region);
         const zoom = returnMapZoom(region, bBox, minZoom);
@@ -150,7 +176,7 @@ const ClusteredMapView = forwardRef(
         onRegionChangeComplete && onRegionChangeComplete(region, markers);
         updateRegion(region);
       } else {
-        onRegionChangeComplete && onRegionChangeComplete(region);
+        onRegionChangeComplete && onRegionChangeComplete(region, details);
       }
     };
 

@@ -1,7 +1,7 @@
-import React, { memo } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import { Marker } from "react-native-maps";
-import { returnMarkerStyle } from "./helpers";
+import { memo } from 'react';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
+import { Marker } from 'react-native-maps';
+import { returnMarkerStyle } from '../utils/helpers';
 
 const ClusteredMarker = ({
   geometry,
@@ -26,10 +26,7 @@ const ClusteredMarker = ({
       onPress={onPress}
       tracksViewChanges={tracksViewChanges}
     >
-      <TouchableOpacity
-        activeOpacity={0.5}
-        style={[styles.container, { width, height }]}
-      >
+      <Pressable style={[styles.container, { width, height }]}>
         <View
           style={[
             styles.wrapper,
@@ -65,30 +62,30 @@ const ClusteredMarker = ({
             {points}
           </Text>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     </Marker>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   wrapper: {
-    position: "absolute",
+    position: 'absolute',
     opacity: 0.5,
     zIndex: 0,
   },
   cluster: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     zIndex: 1,
   },
   text: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 
