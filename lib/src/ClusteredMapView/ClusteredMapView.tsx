@@ -9,7 +9,7 @@ import {
   cloneElement,
 } from 'react';
 import { Dimensions, LayoutAnimation, Platform } from 'react-native';
-import MapView, { Polyline } from 'react-native-maps';
+import MapView, { MapViewProps, Polyline } from 'react-native-maps';
 import SuperCluster from 'supercluster';
 import ClusterMarker from '../ClusteredMarker';
 import {
@@ -115,7 +115,7 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
         let spiralChildren = [];
         markers.map((marker, i) => {
           if (marker.properties.cluster) {
-            spiralChildren = superCluster.getLeaves(
+            spiralChildren = superCluster?.getLeaves(
               marker.properties.cluster_id,
               Infinity,
             );
@@ -130,7 +130,9 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
       }
     }, [isSpiderfier, markers]);
 
-    const _onRegionChangeComplete = (region, details) => {
+    const _onRegionChangeComplete: NonNullable<
+      MapViewProps['onRegionChangeComplete']
+    > = (region, details) => {
       if (superCluster && region) {
         const bBox = calculateBBox(region);
         const zoom = returnMapZoom(region, bBox, minZoom);
@@ -153,7 +155,7 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
     };
 
     const _onClusterPress = cluster => () => {
-      const children = superCluster.getLeaves(cluster.id, Infinity);
+      const children = superCluster?.getLeaves(cluster.id, Infinity);
       updateClusterChildren(children);
 
       if (preserveClusterPressBehavior) {
