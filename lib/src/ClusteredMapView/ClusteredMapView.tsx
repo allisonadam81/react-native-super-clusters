@@ -5,21 +5,11 @@ import {
   useMemo,
   useRef,
   forwardRef,
-  RefObject,
   Children,
-  ReactNode,
+  cloneElement,
 } from 'react';
-import {
-  Dimensions,
-  LayoutAnimation,
-  LayoutAnimationConfig,
-  Platform,
-} from 'react-native';
-import MapView, {
-  EdgePadding,
-  MapViewProps,
-  Polyline,
-} from 'react-native-maps';
+import { Dimensions, LayoutAnimation, Platform } from 'react-native';
+import MapView, { Polyline } from 'react-native-maps';
 import SuperCluster from 'supercluster';
 import ClusterMarker from '../ClusteredMarker';
 import {
@@ -29,32 +19,9 @@ import {
   returnMapZoom,
   generateSpiral,
 } from '../utils';
+import { ClusteredMapViewProps } from './types';
 
 const defaultEdgePadding = { top: 50, left: 50, right: 50, bottom: 50 };
-
-export type ClusteredMapViewProps = {
-  radius?: number;
-  maxZoom?: number;
-  minZoom?: number;
-  minPoints?: number;
-  extent?: number;
-  nodeSize?: number;
-  preserveClusterPressBehavior?: boolean;
-  clusteringEnabled: true;
-  clusterColor?: string;
-  clusterTextColor?: string;
-  clusterFontFamily?: string;
-  spiderLineColor?: string;
-  layoutAnimationConf?: LayoutAnimationConfig;
-  animationEnabled?: boolean;
-  renderCluster?: (clusterProps: any) => ReactNode;
-  tracksViewChanges?: boolean;
-  spiralEnabled?: boolean;
-  superClusterRef?: RefObject<SuperCluster | null>;
-  edgePadding?: EdgePadding;
-  onClusterPress?: (cluster: any, children: any) => void;
-  onMarkersChange?: (markers: any) => void;
-} & MapViewProps;
 
 const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
   (props, ref) => {
@@ -199,21 +166,35 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
         longitude: geometry.coordinates[0],
       }));
 
-      mapRef.current.fitToCoordinates(coordinates, {
+      mapRef.current?.fitToCoordinates(coordinates, {
         edgePadding: restProps.edgePadding,
       });
 
       onClusterPress && onClusterPress(cluster, children);
     };
 
+    const assignRef = (map: MapView | null) => {
+      mapRef.current = map;
+      if (ref) {
+        if (typeof ref === 'function') {
+          ref(map);
+        } else {
+          ref.current = map;
+        }
+      }
+      if (restProps.mapRef) {
+        if (typeof restProps.mapRef === 'function') {
+          restProps.mapRef(map);
+        } else {
+          restProps.mapRef.current = map;
+        }
+      }
+    };
+
     return (
       <MapView
         {...restProps}
-        ref={map => {
-          mapRef.current = map;
-          if (ref) ref.current = map;
-          restProps.mapRef && restProps.mapRef(map);
-        }}
+        ref={assignRef}
         onRegionChangeComplete={_onRegionChangeComplete}>
         {markers.map(marker =>
           marker.properties.point_count === 0 ? (
@@ -247,7 +228,7 @@ const ClusteredMapView = forwardRef<MapView, ClusteredMapViewProps>(
         {otherChildren}
         {spiderMarkers.map(marker => {
           return propsChildren[marker.index]
-            ? React.cloneElement(propsChildren[marker.index], {
+            ? cloneElement(propsChildren[marker.index], {
                 coordinate: { ...marker },
               })
             : null;
